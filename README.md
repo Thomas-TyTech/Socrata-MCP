@@ -2,16 +2,6 @@
 
 A Model Context Protocol (MCP) server that enables AI agents to query Socrata open data platforms using natural language and generate insights from the data.
 
-## Status: ✅ Working
-
-The server has been tested and is fully functional. All core features are working correctly:
-- ✅ MCP server initialization and communication
-- ✅ Dataset querying with SoQL
-- ✅ Dataset search functionality  
-- ✅ Dataset metadata retrieval
-- ✅ Resource access (popular domains, example queries)
-- ✅ All 5 tools functioning properly
-
 ## Features
 
 - **Query Datasets**: Execute SoQL queries on Socrata datasets with support for JSON, CSV, and GeoJSON formats
@@ -121,35 +111,6 @@ After configuring with an MCP client, you can ask questions like:
 
 The AI assistant will use the Socrata MCP tools to search for relevant datasets, query the data, and provide insights.
 
-## SoQL Query Examples
-
-```sql
--- Get all records
-SELECT *
-
--- Filter by conditions
-SELECT * WHERE category = 'THEFT' AND year = 2023
-
--- Aggregate functions
-SELECT COUNT(*) as total_crimes, primary_type
-WHERE year = 2023
-GROUP BY primary_type
-ORDER BY total_crimes DESC
-
--- Date filtering
-SELECT * WHERE date_trunc_ymd(date) = '2023-01-01'
-
--- Geospatial queries
-SELECT * WHERE within_circle(location, 41.8781, -87.6298, 1000)
-```
-
-## Common Socrata Domains
-
-- `data.cityofchicago.org` - Chicago Open Data
-- `data.seattle.gov` - Seattle Open Data
-- `data.sfgov.org` - San Francisco Open Data
-- `data.ny.gov` - New York State Open Data
-- `opendata.dc.gov` - Washington DC Open Data
 
 ## Troubleshooting
 
@@ -182,12 +143,6 @@ python examples/test_functionality.py
 # Example usage demonstrations
 python examples/example_queries.py
 ```
-
-### Recent Fixes
-
-- ✅ Fixed duplicate LIMIT clause issue in SoQL queries
-- ✅ Improved error handling for search timeouts
-- ✅ Added proper query cleaning and validation
 
 ## Development
 
