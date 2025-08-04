@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "socrata": {
+      "command": "python3",
+      "args": ["-m", "socrata_mcp.server"],
+      "cwd": "/Users/thomasfaulds/Documents/GitHub/socrata-mcp",
+      "env": {
+        "SOCRATA_APP_TOKEN": ""
+      }
+    }
+  }
+}
