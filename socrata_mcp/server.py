@@ -14,9 +14,9 @@ from pydantic import AnyUrl
 
 from .socrata_client import SocrataClient
 
-# Configure logging to stderr with more verbose debug info
+# Configure logging to stderr with appropriate level for production
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[logging.StreamHandler()],
 )
