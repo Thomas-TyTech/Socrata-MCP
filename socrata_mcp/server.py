@@ -1,5 +1,3 @@
-"""Socrata MCP Server implementation."""
-
 import asyncio
 import json
 import logging
@@ -14,7 +12,6 @@ from pydantic import AnyUrl
 
 from .socrata_client import SocrataClient
 
-# Configure logging to stderr with appropriate level for production
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -22,12 +19,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Initialize the MCP server
 server = Server("socrata-mcp")
 
-# Initialize Socrata client with optional app token
 app_token = os.getenv("SOCRATA_APP_TOKEN")
-socrata_client = SocrataClient(app_token=app_token, timeout=60.0)  # Increase timeout
+socrata_client = SocrataClient(app_token=app_token, timeout=60.0)
 
 
 @server.list_resources()

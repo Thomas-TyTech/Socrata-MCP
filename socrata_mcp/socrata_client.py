@@ -1,5 +1,3 @@
-"""Socrata API client for querying datasets and generating insights."""
-
 import json
 import logging
 from typing import Any, Dict, List, Optional, Union
@@ -13,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 
 class DatasetInfo(BaseModel):
-    """Dataset metadata information."""
     id: str
     name: str
     description: Optional[str] = None
@@ -26,7 +23,6 @@ class DatasetInfo(BaseModel):
 
 
 class QueryResult(BaseModel):
-    """Query execution result."""
     data: List[Dict[str, Any]]
     total_rows: int
     query: str
@@ -35,15 +31,7 @@ class QueryResult(BaseModel):
 
 
 class SocrataClient:
-    """Client for interacting with Socrata Open Data API."""
-
     def __init__(self, app_token: Optional[str] = None, timeout: float = 30.0):
-        """Initialize the Socrata client.
-        
-        Args:
-            app_token: Optional Socrata application token for higher rate limits
-            timeout: Request timeout in seconds
-        """
         self.app_token = app_token
         self.timeout = timeout
         self.client = httpx.AsyncClient(timeout=timeout)
@@ -55,7 +43,6 @@ class SocrataClient:
         await self.client.aclose()
 
     def _get_headers(self) -> Dict[str, str]:
-        """Get HTTP headers for API requests."""
         headers = {
             "User-Agent": "socrata-mcp/0.1.0",
             "Accept": "application/json",
@@ -65,15 +52,6 @@ class SocrataClient:
         return headers
 
     def _clean_soql_query(self, query: str, dataset_id: str) -> str:
-        """Clean and validate SoQL query to ensure proper syntax.
-        
-        Args:
-            query: Raw SoQL query string
-            dataset_id: Dataset ID to remove from FROM clauses
-            
-        Returns:
-            Cleaned query string
-        """
         import re
         
         # Remove dataset ID from FROM clauses (common mistake)
@@ -98,18 +76,6 @@ class SocrataClient:
         limit: int = 1000,
         format: str = "json",
     ) -> Union[Dict[str, Any], str]:
-        """Execute a SoQL query on a Socrata dataset.
-        
-        Args:
-            domain: Socrata domain (e.g., 'data.cityofchicago.org')
-            dataset_id: Dataset identifier (4x4 format)
-            query: SoQL query string
-            limit: Maximum number of rows to return
-            format: Output format ('json', 'csv', 'geojson')
-            
-        Returns:
-            Query results in the specified format
-        """
         import time
         start_time = time.time()
         
@@ -167,16 +133,6 @@ class SocrataClient:
     async def search_datasets(
         self, domain: str, query: str, limit: int = 20
     ) -> List[Dict[str, Any]]:
-        """Search for datasets on a Socrata domain.
-        
-        Args:
-            domain: Socrata domain to search
-            query: Search query keywords
-            limit: Maximum number of results
-            
-        Returns:
-            List of matching datasets with metadata
-        """
         search_url = f"https://{domain}/api/catalog/v1"
         
         params = {
@@ -229,15 +185,6 @@ class SocrataClient:
             raise
 
     async def get_dataset_info(self, domain: str, dataset_id: str) -> Dict[str, Any]:
-        """Get detailed information about a dataset.
-        
-        Args:
-            domain: Socrata domain
-            dataset_id: Dataset identifier
-            
-        Returns:
-            Dataset metadata and schema information
-        """
         metadata_url = f"https://{domain}/api/views/{dataset_id}.json"
         
         try:
@@ -290,18 +237,6 @@ class SocrataClient:
         question: str,
         execute: bool = True,
     ) -> Dict[str, Any]:
-        """Convert natural language question to SoQL query.
-        
-        Args:
-            domain: Socrata domain
-            dataset_id: Dataset identifier
-            question: Natural language question
-            execute: Whether to execute the generated query
-            
-        Returns:
-            Generated SoQL query and optionally execution results
-        """
-        # First get dataset info to understand the schema
         try:
             dataset_info = await self.get_dataset_info(domain, dataset_id)
             
@@ -331,11 +266,6 @@ class SocrataClient:
     async def _generate_soql_query(
         self, dataset_info: Dict[str, Any], question: str
     ) -> str:
-        """Generate SoQL query from natural language question.
-        
-        This is a simplified implementation. In production, you'd want to use
-        a more sophisticated NLP model or LLM to generate better queries.
-        """
         columns = [col["name"] for col in dataset_info["columns"]]
         question_lower = question.lower()
         
@@ -375,17 +305,6 @@ class SocrataClient:
         query: str,
         analysis_type: str = "summary",
     ) -> Dict[str, Any]:
-        """Analyze query results and generate insights.
-        
-        Args:
-            domain: Socrata domain
-            dataset_id: Dataset identifier
-            query: SoQL query to analyze results for
-            analysis_type: Type of analysis ('summary', 'trends', 'correlations', 'anomalies')
-            
-        Returns:
-            Analysis results and insights
-        """
         try:
             # Execute the query to get data
             query_result = await self.query_dataset(
@@ -425,7 +344,6 @@ class SocrataClient:
             raise
 
     def _generate_summary_insights(self, df: pd.DataFrame) -> List[str]:
-        """Generate summary insights from DataFrame."""
         insights = []
         
         insights.append(f"Dataset contains {len(df)} rows and {len(df.columns)} columns")
@@ -450,7 +368,6 @@ class SocrataClient:
         return insights
 
     def _generate_trend_insights(self, df: pd.DataFrame) -> List[str]:
-        """Generate trend insights from DataFrame."""
         insights = ["Trend analysis requires time-series data"]
         
         # Look for date columns
@@ -467,7 +384,6 @@ class SocrataClient:
         return insights
 
     def _generate_correlation_insights(self, df: pd.DataFrame) -> List[str]:
-        """Generate correlation insights from DataFrame."""
         insights = []
         
         numeric_df = df.select_dtypes(include=["number"])
@@ -486,7 +402,6 @@ class SocrataClient:
         return insights
 
     def _generate_anomaly_insights(self, df: pd.DataFrame) -> List[str]:
-        """Generate anomaly insights from DataFrame."""
         insights = []
         
         numeric_cols = df.select_dtypes(include=["number"]).columns

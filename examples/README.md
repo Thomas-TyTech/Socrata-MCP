@@ -7,6 +7,9 @@ This directory contains example files and configurations for the Socrata MCP Ser
 ### `claude_desktop_config.json`
 Example configuration for Claude Desktop MCP settings. Copy this configuration to your Claude Desktop settings and update the `cwd` path to point to your installation directory.
 
+### `cline_mcp_config.json`
+Example configuration for Cline (VS Code extension) MCP settings. Copy this configuration to your Cline MCP settings and update the `cwd` path to point to your installation directory.
+
 ### `example_queries.py`
 Demonstrates how to use the Socrata client directly in Python code. Shows examples of:
 - Searching for datasets
