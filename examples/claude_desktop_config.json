@@ -3,9 +3,9 @@
     "socrata": {
       "command": "python3",
       "args": ["-m", "socrata_mcp.server"],
-      "cwd": "/Users/thomasfaulds/Documents/GitHub/socrata-mcp",
+      "cwd": "/path/to/your/socrata-mcp",
       "env": {
-        "SOCRATA_APP_TOKEN": ""
+        "SOCRATA_APP_TOKEN": "your_app_token_here_optional"
       }
     }
   }

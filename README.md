@@ -31,8 +31,7 @@ cd socrata-mcp
 pip install -e .
 
 # Test the installation
-python test_server.py
-python test_mcp_functionality.py
+python examples/test_functionality.py
 ```
 
 ## Usage
@@ -131,11 +130,11 @@ SELECT * WHERE within_circle(location, 41.8781, -87.6298, 1000)
 Run the test suite to verify everything is working:
 
 ```bash
-# Basic import and client tests
-python test_server.py
-
 # Full MCP functionality tests
-python test_mcp_functionality.py
+python examples/test_functionality.py
+
+# Example usage demonstrations
+python examples/example_queries.py
 ```
 
 ### Recent Fixes
