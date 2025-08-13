@@ -26,13 +26,13 @@ python examples/test_functionality.py
 
 ## Usage with MCP Clients
 
-This is an **MCP (Model Context Protocol) server** that needs to be used with an MCP-compatible client. It cannot be used standalone - you must configure it with one of the supported clients below.
+This is an **MCP (Model Context Protocol) server** that needs to be used with an MCP-compatible client. It cannot be used standalone - you must configure it with a client that supports MCP. There are many and I have listed a few below.
 
 ### Supported MCP Clients
 
-- **[Cline](https://github.com/cline/cline)** - VS Code extension for AI-powered coding
-- **[Claude Desktop](https://claude.ai/desktop)** - Anthropic's desktop application
-- **[Claude Code](https://marketplace.visualstudio.com/items?itemName=Anthropic.claude-vscode)** - VS Code extension by Anthropic
+- **[Cline](https://github.com/cline/cline)** - VS Code extension for AI-assisted coding with Claude
+- **[Claude Desktop](https://claude.ai/download)** - Anthropic's Claude desktop application
+- **[Claude Code](https://www.npmjs.com/package/@anthropic-ai/claude-code)** - TUI based npm package by Anthropic
 
 ### Configuration for Different Clients
 
@@ -70,7 +70,7 @@ This is an **MCP (Model Context Protocol) server** that needs to be used with an
       "args": ["-m", "socrata_mcp.server"],
       "cwd": "/path/to/your/socrata-mcp",
       "env": {
-        "SOCRATA_APP_TOKEN": "your_app_token_here_optional"
+        "SOCRATA_APP_TOKEN": "your_app_token_here"
       }
     }
   }
@@ -109,54 +109,7 @@ After configuring with an MCP client, you can ask questions like:
 - "Show me building permits issued in San Francisco last year"
 - "Analyze traffic accident trends in New York"
 
-The AI assistant will use the Socrata MCP tools to search for relevant datasets, query the data, and provide insights.
+The AI assistant you connect the MCP server to will use the Socrata MCP to search for relevant datasets, query the data, and provide insights.
 
 
-## Troubleshooting
 
-### Common Issues
-
-1. **Query Syntax Errors**: 
-   - Don't include `FROM` clauses in SoQL queries - the dataset is implicit from the API endpoint
-   - Avoid duplicate `LIMIT` clauses - the server automatically handles limits
-
-2. **Rate Limiting**:
-   - Get a free Socrata app token from [dev.socrata.com](https://dev.socrata.com/register)
-   - Set the `SOCRATA_APP_TOKEN` environment variable
-
-3. **Dataset Not Found**:
-   - Verify the domain and dataset ID are correct
-   - Use the search tool to find available datasets
-
-4. **Connection Issues**:
-   - Check internet connectivity
-   - Some domains may have different API endpoints
-
-### Testing
-
-Run the test suite to verify everything is working:
-
-```bash
-# Full MCP functionality tests
-python examples/test_functionality.py
-
-# Example usage demonstrations
-python examples/example_queries.py
-```
-
-## Development
-
-```bash
-# Install development dependencies
-pip install -e ".[dev]"
-
-# Run type checking
-mypy socrata_mcp/
-
-# Format code
-black socrata_mcp/
-```
-
-## License
-
-MIT License

@@ -155,7 +155,7 @@ class SocrataClient:
             results = catalog_data.get("results", [])
             
             # Transform results to simplified format
-            datasets = []
+            all_datasets = []
             for item in results:
                 resource = item.get("resource", {})
                 description = resource.get("description", "")
@@ -163,7 +163,7 @@ class SocrataClient:
                 if len(description) > 500:
                     description = description[:500] + "..."
                     
-                datasets.append({
+                all_datasets.append({
                     "id": resource.get("id", ""),
                     "name": resource.get("name", ""),
                     "description": description,
@@ -175,7 +175,26 @@ class SocrataClient:
                     "permalink": item.get("permalink", ""),
                 })
             
-            return datasets
+            # Filter results to only include datasets from the requested domain
+            domain_filtered_datasets = []
+            for dataset in all_datasets:
+                permalink = dataset.get("permalink", "")
+                if permalink and domain in permalink:
+                    domain_filtered_datasets.append(dataset)
+            
+            # Log filtering results for debugging
+            logger.info(f"Found {len(all_datasets)} total results, {len(domain_filtered_datasets)} from domain {domain}")
+            
+            # If we have domain-specific results, return them
+            if domain_filtered_datasets:
+                return domain_filtered_datasets[:limit]  # Respect the limit
+            
+            # If no domain-specific results found, log warning and return empty list
+            # This prevents returning irrelevant results from other domains
+            logger.warning(f"No datasets found on domain {domain} for query '{query}'. "
+                         f"Found {len(all_datasets)} results from other domains, but filtering them out.")
+            
+            return []
             
         except httpx.HTTPError as e:
             logger.error(f"HTTP error searching datasets: {e}")
